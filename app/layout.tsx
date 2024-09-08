@@ -12,7 +12,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body>
+      <body className="px-2 pb-6">
         <Providers>
         <Appbar />
         {children}

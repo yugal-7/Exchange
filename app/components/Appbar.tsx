@@ -8,16 +8,16 @@ export const Appbar = () => {
     const router = useRouter();
     
     return (
-    <div className="h-14 border-2 border-white pl-[21px] pr-4 flex flex-col justify-center">
+    <div className="h-14 pl-[21px] pr-4 flex flex-col justify-center">
         <div className="flex justify-between">
         <div className="flex items-center">
-            <h1 className="font-bold mr-6 cursor-pointer" onClick={() => router.push('/')}>Yugal's Exchange</h1>
+            <h1 className="font-bold mr-6 cursor-pointer" onClick={() => router.push('/')}>Trade Wave</h1>
             <div className="ml-[20px] mr-[20px] cursor-pointer" onClick={() => router.push('/markets')}>Markets</div>
             <div className="ml-[20px] mr-[20px] cursor-pointer" onClick={() => router.push('/trade/SOL_USDC')}>Trade</div>
         </div>
         <div>
-            <PrimaryButton>Deposit</PrimaryButton>
-            <SuccessButton>Withdraw</SuccessButton>
+            <PrimaryButton>Sign up</PrimaryButton>
+            <SuccessButton>Sign in</SuccessButton>
         </div>
     </div>
     </div>)

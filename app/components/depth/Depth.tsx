@@ -87,7 +87,7 @@ function Trades({trades}:{trades: Trade[]}){
     return <div>
         {
             trades.map((trade) => {
-                return <div className={trade.a > trade.b ? 'text-red-500' : 'text-green-500'}>
+                return <div className={trade.a > trade.b ? 'text-red-500' : 'text-green-500'} key={trade.time}>
                     <span className="mx-1">{trade.price}</span>
                     <span className="mx-1">{trade.quantity}</span>
                     <span className="mx-1">{new Date(trade.time).getHours()}</span>

@@ -5,7 +5,7 @@ export const Tile = ({props}:any) => {
         <h1 className="text-xl">{props.title}</h1>
        {
         data.map((d: any) => { 
-             return <div className="flex flex-row justify-between">
+             return <div className="flex flex-row justify-between" key={d.name}>
              <span>{d.name}</span>
              <span>{d.price}</span>
              <span>{d.per}</span>

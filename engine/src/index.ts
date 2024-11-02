@@ -3,7 +3,7 @@ import { Engine } from "./trade/Engine";
 
 
 async function main() {
-    const engine = new Engine(); 
+    const engine = new Engine('SOL'); 
     const redisClient = createClient();
     await redisClient.connect();
     console.log("connected to redis");

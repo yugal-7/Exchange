@@ -17,7 +17,7 @@ vi.mock("../RedisManager", () => ({
 describe("Engine", () => {
     //TODO: How to test the singleton class RedisManager directly?
     it("Publishes Trade updates", () => {
-        const engine = new Engine();
+        const engine = new Engine('SOL');
         const publishSpy = vi.spyOn(engine, "publishWsTrades");
         engine.process({
             message: {

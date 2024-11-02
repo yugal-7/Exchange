@@ -5,7 +5,7 @@ import { CANCEL_ORDER, CREATE_ORDER, GET_DEPTH, GET_OPEN_ORDERS, MessageFromApi,
 import { Fill, Order, Orderbook } from "./Orderbook";
 
 //TODO: Avoid floats everywhere, use a decimal similar to the PayTM project for every currency
-export const BASE_CURRENCY = "INR";
+export const BASE_CURRENCY = "USDC";
 
 interface UserBalance {
     [key: string]: {
@@ -17,8 +17,10 @@ interface UserBalance {
 export class Engine {
     private orderbooks: Orderbook[] = [];
     private balances: Map<string, UserBalance> = new Map();
+    private quote: string = 'SOL';
 
-    constructor() {
+    constructor(q: string) {
+        this.quote = q;
         let snapshot = null
         try {
             if (process.env.WITH_SNAPSHOT) {
@@ -33,7 +35,7 @@ export class Engine {
             this.orderbooks = snapshotSnapshot.orderbooks.map((o: any) => new Orderbook(o.baseAsset, o.bids, o.asks, o.lastTradeId, o.currentPrice));
             this.balances = new Map(snapshotSnapshot.balances);
         } else {
-            this.orderbooks = [new Orderbook(`TATA`, [], [], 0, 0)];
+            this.orderbooks = [new Orderbook(this.quote, [], [], 0, 0)];
             this.setBaseBalances();
         }
         setInterval(() => {
@@ -50,6 +52,7 @@ export class Engine {
     }
 
     process({ message, clientId }: {message: MessageFromApi, clientId: string}) {
+        console.table(message.data);
         switch (message.type) {
             case CREATE_ORDER:
                 try {
@@ -177,7 +180,7 @@ export class Engine {
     }
 
     createOrder(market: string, price: string, quantity: string, side: "buy" | "sell", userId: string) {
-
+        console.log(this.orderbooks);
         const orderbook = this.orderbooks.find(o => o.ticker() === market)
         const baseAsset = market.split("_")[0];
         const quoteAsset = market.split("_")[1];
@@ -284,6 +287,7 @@ export class Engine {
     }
 
     publisWsDepthUpdates(fills: Fill[], price: string, side: "buy" | "sell", market: string) {
+        console.log('Publish WS updates');
         const orderbook = this.orderbooks.find(o => o.ticker() === market);
         if (!orderbook) {
             return;
@@ -400,7 +404,7 @@ export class Engine {
                 available: 10000000,
                 locked: 0
             },
-            "TATA": {
+            quote: {
                 available: 10000000,
                 locked: 0
             }
@@ -411,7 +415,7 @@ export class Engine {
                 available: 10000000,
                 locked: 0
             },
-            "TATA": {
+            [this.quote]: {
                 available: 10000000,
                 locked: 0
             }
@@ -422,7 +426,7 @@ export class Engine {
                 available: 10000000,
                 locked: 0
             },
-            "TATA": {
+            [this.quote]: {
                 available: 10000000,
                 locked: 0
             }

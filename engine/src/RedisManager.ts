@@ -48,6 +48,8 @@ export class RedisManager {
     }
 
     public publishMessage(channel: string, message: WsMessage) {
+        console.log(channel);
+        console.log(message);
         this.client.publish(channel, JSON.stringify(message));
     }
 

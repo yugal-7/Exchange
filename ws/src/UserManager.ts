@@ -30,6 +30,10 @@ export class UserManager {
             this.users.delete(id);
             SubscriptionManager.getInstance().userLeft(id);
         });
+        ws.on("error", (error) => {
+            console.error(`WebSocket error for user ${id}:`, error); // Error handling
+            this.users.delete(id); // Optionally remove on error
+        });
     }
 
     public getUser(id: string) {

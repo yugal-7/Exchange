@@ -1,6 +1,7 @@
 import { Ticker } from "./types";
 
-export const BASE_URL = "wss://ws.backpack.exchange/"
+// export const BASE_URL = "wss://ws.backpack.exchange/"
+export const BASE_URL = "ws://localhost:3001"
 
 export class SignalingManager {
     private ws: WebSocket;
@@ -21,6 +22,7 @@ export class SignalingManager {
         if (!this.instance)  {
             this.instance = new SignalingManager();
         }
+        console.log(this.instance);
         return this.instance;
     }
 
@@ -34,9 +36,10 @@ export class SignalingManager {
         }
         this.ws.onmessage = (event) => {
             const message = JSON.parse(event.data);
+            console.log(message);
             const type = message.data.e;
             if (this.callbacks[type]) {
-                this.callbacks[type].forEach(({ callback }) => {
+                this.callbacks[type].forEach(({ callback }:any) => {
                     if (type === "ticker") {
                         const newTicker: Partial<Ticker> = {
                             lastPrice: message.data.c,
@@ -46,7 +49,7 @@ export class SignalingManager {
                             quoteVolume: message.data.V,
                             symbol: message.data.s,
                         }
-
+                        console.log(newTicker);
                         callback(newTicker);
                    }
                    if (type === "depth") {
@@ -63,15 +66,6 @@ export class SignalingManager {
                         const updatedBids = message.data.b;
                         const updatedAsks = message.data.a;
                         callback({ bids: updatedBids, asks: updatedAsks });
-                    }
-                    if(type === 'trade'){
-                        callback({
-                            price: message.data.p,
-                            quantity: message.data.q,
-                            time: message.data.T,
-                            a: message.data.a,
-                            b: message.data.b
-                        });
                     }
                 });
             }
@@ -98,7 +92,7 @@ export class SignalingManager {
 
     async deRegisterCallback(type: string, id: string) {
         if (this.callbacks[type]) {
-            const index = this.callbacks[type].findIndex(callback => callback.id === id);
+            const index = this.callbacks[type].findIndex((callback: { id: string; }) => callback.id === id);
             if (index !== -1) {
                 this.callbacks[type].splice(index, 1);
             }

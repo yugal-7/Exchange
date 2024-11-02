@@ -27,7 +27,7 @@ async function main() {
                 console.log(data);
                 const price = data.data.price;
                 const timestamp = new Date(data.data.timestamp);
-                const query = 'INSERT INTO tata_prices (time, price) VALUES ($1, $2)';
+                const query = 'INSERT INTO sol_prices (time, price) VALUES ($1, $2)';
                 // TODO: How to add volume?
                 const values = [timestamp, price];
                 await pgClient.query(query, values);

@@ -21,7 +21,7 @@ export class SubscriptionManager {
 
     public subscribe(userId: string, subscription: string) {
         if (this.subscriptions.get(userId)?.includes(subscription)) {
-            return
+            return;
         }
 
         this.subscriptions.set(userId, (this.subscriptions.get(userId) || []).concat(subscription));

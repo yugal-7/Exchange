@@ -22,6 +22,7 @@ export function Depth({ market }: {market: string}) {
 
     useEffect(() => {
         getDepth(market).then(d => {
+            console.log('get depth');
             setBids(d.bids.reverse());
             setAsks(d.asks);
         });
@@ -30,6 +31,7 @@ export function Depth({ market }: {market: string}) {
 
         SignalingManager.getInstance().registerCallback('depth', (data: any)=>{
             setBids((oldBids) => {
+                console.log('set bids');
                 const newBids = [...(oldBids || [])];
                 for(let i=0;i<newBids?.length;i++){
                     for(let j=0;j<data.bids.length;j++){
@@ -76,7 +78,7 @@ export function Depth({ market }: {market: string}) {
     
     return <div>
         <TableHeader />
-        <Trades trades={trades}/>
+        {/* <Trades trades={trades}/> */}
         {asks && <AskTable asks={asks} />}
         {price && <div>{price}</div>}
         {bids && <BidTable bids={bids} />}

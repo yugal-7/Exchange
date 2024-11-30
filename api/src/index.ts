@@ -19,6 +19,6 @@ app.use("/api/v1/trades", tradesRouter);
 app.use("/api/v1/tickers", tickersRouter);
 
 
-app.listen(3000, () => {
+app.listen(8080, () => {
     console.log("Server is running on port 3000");
 });

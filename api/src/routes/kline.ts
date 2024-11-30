@@ -3,10 +3,10 @@ import { Router } from "express";
 import { RedisManager } from "../RedisManager";
 
 const pgClient = new Client({
-    user: 'your_user',
-    host: 'localhost',
-    database: 'my_database',
-    password: 'your_password',
+    user: process.env.DATABASE_USER,
+    host: process.env.DATABASE_HOST,
+    database: process.env.DATABASE_NAME,
+    password: process.env.DATABASE_PASSWORD,
     port: 5432,
 });
 pgClient.connect();

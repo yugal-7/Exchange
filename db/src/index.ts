@@ -12,7 +12,13 @@ const pgClient = new Client({
 pgClient.connect();
 
 async function main() {
-    const redisClient = createClient();
+    const redisClient = createClient({
+        password: process.env.REDIS_PASS,
+        socket: {
+            host: process.env.REDIS_HOST,
+            port: 10626
+        }
+    });
     await redisClient.connect();
     console.log("connected to redis");
 

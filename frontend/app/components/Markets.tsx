@@ -9,7 +9,7 @@ export const Markets = () => {
   const [tickers, setTickers] = useState<Ticker[]>();
 
   useEffect(() => {
-    getTickers().then((m) => setTickers(m));
+    getTickers().then((m) => setTickers(m.sort((a,b) => Number(b.lastPrice) - Number(a.lastPrice))));
   }, []);
 
   return (
@@ -28,6 +28,12 @@ export const Markets = () => {
 
 function MarketRow({ market }: { market: Ticker }) {
   const router = useRouter();
+
+  const getMarketName = (name: string) => {
+    const index = name.indexOf('_USDC');
+    return name.substring(0,index);
+  }
+
   return (
     <tr className="cursor-pointer border-t border-baseBorderLight hover:bg-white/7 w-full" onClick={() => router.push(`/trade/${market.symbol}`)}>
       <td className="px-1 py-3">
@@ -40,7 +46,7 @@ function MarketRow({ market }: { market: Ticker }) {
               <div className="relative">
                 <img
                   alt={market.symbol}
-                  src={"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVvBqZC_Q1TSYObZaMvK0DRFeHZDUtVMh08Q&s"}
+                  src={`https://backpack.exchange/coins/${getMarketName(market.symbol).toLowerCase()}.svg`}
                   loading="lazy"
                   width="40"
                   height="40"
@@ -52,7 +58,7 @@ function MarketRow({ market }: { market: Ticker }) {
             </div>
             <div className="ml-4 flex flex-col">
               <p className="whitespace-nowrap text-base font-medium text-baseTextHighEmphasis">
-                {market.symbol}
+                {getMarketName(market.symbol)}
               </p>
               <div className="flex items-center justify-start flex-row gap-2">
                 <p className="flex-medium text-left text-xs leading-5 text-baseTextMedEmphasis">
@@ -64,17 +70,17 @@ function MarketRow({ market }: { market: Ticker }) {
         </div>
       </td>
       <td className="px-1 py-3">
-        <p className="text-base font-medium tabular-nums">{market.lastPrice}</p>
+        <p className="text-base font-medium tabular-nums">$ {market.lastPrice}</p>
       </td>
       <td className="px-1 py-3">
-        <p className="text-base font-medium tabular-nums">{market.high}</p>
+        <p className="text-base font-medium tabular-nums">$ {market.high}</p>
       </td>
       <td className="px-1 py-3">
         <p className="text-base font-medium tabular-nums">{market.volume}</p>
       </td>
       <td className="px-1 py-3">
-        <p className="text-base font-medium tabular-nums text-greenText">
-          {Number(market.priceChangePercent)?.toFixed(3)} %
+        <p className={"text-base font-medium tabular-nums " + (Number(market.priceChangePercent) >= 0 ? 'text-green-600':'text-rose-600')}>
+          {(Number(market.priceChangePercent)*100).toFixed(2)} %
         </p>
       </td> 
     </tr>

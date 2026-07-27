@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, Network, X } from "lucide-react";
 import { PrimaryButton, SuccessButton } from "./core/Button"
 import { useRouter, usePathname } from "next/navigation"
 import { useDemoMode, setForcedDemoMode } from "../utils/demoMode"
@@ -9,6 +9,7 @@ import { useSession, signOut, type Session } from "../utils/session"
 import { showToast } from "../utils/toast"
 import { requestAuth, clearAuthRequest, useAuthModalRequest } from "../utils/authModalRequest"
 import { AuthModal } from "./AuthModal"
+import { SystemDesignModal } from "./SystemDesignModal"
 
 const NAV_LINKS = [
     { label: "Markets", href: "/markets" },
@@ -22,6 +23,7 @@ export const Appbar = () => {
     const isDemoMode = useDemoMode();
     const session = useSession();
     const [menuOpen, setMenuOpen] = useState(false);
+    const [systemDesignOpen, setSystemDesignOpen] = useState(false);
     const authMode = useAuthModalRequest();
 
     const goto = (href: string) => {
@@ -89,6 +91,15 @@ export const Appbar = () => {
                 </div>
 
                 <button
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-baseTextMedEmphasis transition hover:bg-baseBackgroundL2 hover:text-baseTextHighEmphasis active:bg-baseBackgroundL2 md:h-9 md:w-9"
+                    onClick={() => setSystemDesignOpen(true)}
+                    title="View system design"
+                    aria-label="View system design"
+                >
+                    <Network size={19} />
+                </button>
+
+                <button
                     className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-baseTextHighEmphasis transition active:bg-baseBackgroundL2 md:hidden"
                     onClick={() => setMenuOpen((v) => !v)}
                     aria-label={menuOpen ? "Close menu" : "Open menu"}
@@ -121,6 +132,7 @@ export const Appbar = () => {
             )}
 
             <AuthModal open={authMode !== null} mode={authMode ?? 'signin'} onClose={() => clearAuthRequest()} />
+            <SystemDesignModal open={systemDesignOpen} onClose={() => setSystemDesignOpen(false)} />
         </div>
     )
 }

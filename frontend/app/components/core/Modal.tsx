@@ -2,7 +2,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
-export function Modal({ open, onClose, children }: { open: boolean, onClose: () => void, children: ReactNode }) {
+export function Modal({ open, onClose, children, panelClassName = "max-w-sm" }: { open: boolean, onClose: () => void, children: ReactNode, panelClassName?: string }) {
     const [mounted, setMounted] = useState(false);
     useEffect(() => setMounted(true), []);
 
@@ -17,7 +17,7 @@ export function Modal({ open, onClose, children }: { open: boolean, onClose: () 
             onClick={onClose}
         >
             <div
-                className="w-full max-w-sm rounded-xl border border-baseBorderLight bg-baseBackgroundL1 p-6 shadow-xl"
+                className={`max-h-[85vh] w-full overflow-y-auto rounded-xl border border-baseBorderLight bg-baseBackgroundL1 p-6 shadow-xl ${panelClassName}`}
                 onClick={(e) => e.stopPropagation()}
             >
                 {children}

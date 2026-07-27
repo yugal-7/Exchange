@@ -32,19 +32,22 @@ export const MarketBar = ({ market }: { market: string }) => {
     const isUp = Number(ticker?.priceChange) >= 0;
 
     return (
-        <div className="flex w-full flex-row items-center overflow-x-auto border-b border-baseBorderLight no-scrollbar">
-            <div className="flex flex-row items-center gap-8 py-3 pl-2 pr-4">
-                <MarketIdentity market={market} />
-                <Stat label="Last Price" value={ticker ? `$${ticker.lastPrice}` : '—'} valueClassName={isUp ? "text-greenText" : "text-redText"} />
-                <Stat
-                    label="24H Change"
-                    value={ticker ? `${isUp ? "+" : ""}${ticker.priceChange} (${(Number(ticker.priceChangePercent) * 100).toFixed(2)}%)` : '—'}
-                    valueClassName={isUp ? "text-greenText" : "text-redText"}
-                />
-                <Stat label="24H High" value={ticker ? `$${ticker.high}` : '—'} />
-                <Stat label="24H Low" value={ticker ? `$${ticker.low}` : '—'} />
-                <Stat label="24H Volume" value={ticker ? ticker.volume : '—'} />
+        <div className="relative w-full border-b border-baseBorderLight">
+            <div className="flex w-full flex-row items-center overflow-x-auto no-scrollbar">
+                <div className="flex flex-row items-center gap-8 py-3 pl-2 pr-6">
+                    <MarketIdentity market={market} />
+                    <Stat label="Last Price" value={ticker ? `$${ticker.lastPrice}` : '—'} valueClassName={isUp ? "text-greenText" : "text-redText"} />
+                    <Stat
+                        label="24H Change"
+                        value={ticker ? `${isUp ? "+" : ""}${ticker.priceChange} (${(Number(ticker.priceChangePercent) * 100).toFixed(2)}%)` : '—'}
+                        valueClassName={isUp ? "text-greenText" : "text-redText"}
+                    />
+                    <Stat label="24H High" value={ticker ? `$${ticker.high}` : '—'} />
+                    <Stat label="24H Low" value={ticker ? `$${ticker.low}` : '—'} />
+                    <Stat label="24H Volume" value={ticker ? ticker.volume : '—'} />
+                </div>
             </div>
+            <div className="pointer-events-none absolute right-0 top-0 h-full w-8 bg-gradient-to-l from-baseBackgroundL0 to-transparent sm:hidden" />
         </div>
     );
 }

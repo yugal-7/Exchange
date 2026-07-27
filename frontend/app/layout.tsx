@@ -3,6 +3,7 @@ import "./globals.css";
 import { Appbar } from "./components/Appbar";
 import { Providers } from "./providers";
 import StoreProvider from './StoreProvider';
+import { Toaster } from "./components/core/Toaster";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -13,11 +14,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="px-2 pb-6">
+      <body className="overflow-x-hidden px-2 pb-6">
         <StoreProvider>
         <Providers>
         <Appbar />
         {children}
+        <Toaster />
         </Providers>
         </StoreProvider>
         </body>

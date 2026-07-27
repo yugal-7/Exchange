@@ -1,12 +1,16 @@
 import axios from "axios";
 import { Depth, KLine, Ticker, Trade } from "./types";
 import { getDummyDepth, getDummyKlines, getDummyTicker, getDummyTickers, getDummyTrades } from "./dummyData";
-import { setDemoMode } from "./demoMode";
+import { isForcedDemoMode, setDemoMode } from "./demoMode";
 
 const BASE_URL = "https://exchange-api-515503941182.us-central1.run.app/api/v1";
 const REQUEST_TIMEOUT_MS = 5000;
 
 async function withDummyFallback<T>(request: () => Promise<T>, fallback: () => T): Promise<T> {
+    if (isForcedDemoMode()) {
+        setDemoMode(true);
+        return fallback();
+    }
     try {
         const result = await request();
         setDemoMode(false);

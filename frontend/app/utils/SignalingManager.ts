@@ -1,6 +1,6 @@
 import { Ticker } from "./types";
 import { getDummyDepth, getDummyTicker } from "./dummyData";
-import { setDemoMode } from "./demoMode";
+import { isForcedDemoMode, setDemoMode } from "./demoMode";
 
 export const BASE_URL = process.env.NEXT_PUBLIC_WS_URL || "ws://localhost:3001";
 const CONNECT_TIMEOUT_MS = 4000;
@@ -32,6 +32,11 @@ export class SignalingManager {
     }
 
     private connect() {
+        if (isForcedDemoMode()) {
+            this.startDummyFeed();
+            return;
+        }
+
         try {
             this.ws = new WebSocket(BASE_URL);
         } catch (error) {

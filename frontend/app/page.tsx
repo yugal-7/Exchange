@@ -31,7 +31,7 @@ export default function Home() {
             </button>
             <button
               onClick={() => router.push('/markets')}
-              className="rounded-lg border border-baseBorderMed bg-baseBackgroundL1/60 px-5 py-2.5 text-sm font-semibold text-baseTextHighEmphasis backdrop-blur transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2"
+              className="rounded-lg border border-baseBorderMed bg-baseBackgroundL1/60 px-5 py-2.5 text-sm font-semibold text-baseTextHighEmphasis backdrop-blur transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2 active:scale-[0.98]"
             >
               View Markets
             </button>

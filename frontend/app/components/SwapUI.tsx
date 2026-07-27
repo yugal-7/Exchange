@@ -88,6 +88,7 @@ export function SwapUI({ market }: { market: string }) {
                                     disabled={type === 'market'}
                                     className="h-12 rounded-lg border-2 border-solid border-baseBorderLight bg-baseBackgroundL1 pr-14 text-right text-2xl leading-9 text-baseTextHighEmphasis placeholder-baseTextMedEmphasis ring-0 transition focus:border-accentBlue focus:outline-none disabled:opacity-50"
                                     type="text"
+                                    inputMode="decimal"
                                     value={type === 'market' ? '' : price}
                                     onChange={(e) => setPrice(e.target.value.replace(/[^0-9.]/g, ''))}
                                 />
@@ -107,6 +108,7 @@ export function SwapUI({ market }: { market: string }) {
                                 placeholder="0"
                                 className="h-12 rounded-lg border-2 border-solid border-baseBorderLight bg-baseBackgroundL1 pr-14 text-right text-2xl leading-9 text-baseTextHighEmphasis placeholder-baseTextMedEmphasis ring-0 transition focus:border-accentBlue focus:outline-none"
                                 type="text"
+                                inputMode="decimal"
                                 value={quantity}
                                 onChange={(e) => setQuantity(e.target.value.replace(/[^0-9.]/g, ''))}
                             />
@@ -123,7 +125,7 @@ export function SwapUI({ market }: { market: string }) {
                                     key={percent}
                                     type="button"
                                     onClick={() => applyPercent(percent)}
-                                    className="flex items-center justify-center flex-row rounded-full px-[16px] py-[6px] text-xs cursor-pointer bg-baseBackgroundL2 text-baseTextMedEmphasis transition hover:bg-baseBackgroundL3 hover:text-baseTextHighEmphasis"
+                                    className="flex items-center justify-center flex-row rounded-full px-[16px] py-[6px] text-xs cursor-pointer bg-baseBackgroundL2 text-baseTextMedEmphasis transition hover:bg-baseBackgroundL3 hover:text-baseTextHighEmphasis active:scale-90"
                                 >
                                     {percent === 100 ? 'Max' : `${percent}%`}
                                 </button>
@@ -157,7 +159,7 @@ export function SwapUI({ market }: { market: string }) {
 }
 
 function LimitButton({ type, setType }: { type: string, setType: (t: string) => void }) {
-    return <div className="flex flex-col cursor-pointer justify-center py-2" onClick={() => setType('limit')}>
+    return <div className="flex flex-col cursor-pointer justify-center py-2 transition active:opacity-60" onClick={() => setType('limit')}>
         <div className={`text-sm font-medium py-1 border-b-2 ${type === 'limit' ? "border-accentBlue text-baseTextHighEmphasis" : "border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"}`}>
             Limit
         </div>
@@ -165,7 +167,7 @@ function LimitButton({ type, setType }: { type: string, setType: (t: string) => 
 }
 
 function MarketButton({ type, setType }: { type: string, setType: (t: string) => void }) {
-    return <div className="flex flex-col cursor-pointer justify-center py-2" onClick={() => setType('market')}>
+    return <div className="flex flex-col cursor-pointer justify-center py-2 transition active:opacity-60" onClick={() => setType('market')}>
         <div className={`text-sm font-medium py-1 border-b-2 ${type === 'market' ? "border-accentBlue text-baseTextHighEmphasis" : "border-transparent text-baseTextMedEmphasis hover:border-baseTextHighEmphasis hover:text-baseTextHighEmphasis"} `}>
             Market
         </div>
@@ -173,7 +175,7 @@ function MarketButton({ type, setType }: { type: string, setType: (t: string) =>
 }
 
 function BuyButton({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t: 'buy' | 'sell') => void }) {
-    return <div className={`flex flex-col mb-[-2px] flex-1 cursor-pointer justify-center border-b-2 p-4 ${activeTab === 'buy' ? 'border-b-greenBorder bg-greenBackgroundTransparent' : 'border-b-baseBorderMed hover:border-b-baseBorderFocus'}`} onClick={() => setActiveTab('buy')}>
+    return <div className={`flex flex-col mb-[-2px] flex-1 cursor-pointer justify-center border-b-2 p-4 transition active:bg-baseBackgroundL2 ${activeTab === 'buy' ? 'border-b-greenBorder bg-greenBackgroundTransparent' : 'border-b-baseBorderMed hover:border-b-baseBorderFocus'}`} onClick={() => setActiveTab('buy')}>
         <p className="text-center text-sm font-semibold text-greenText">
             Buy
         </p>
@@ -181,7 +183,7 @@ function BuyButton({ activeTab, setActiveTab }: { activeTab: string, setActiveTa
 }
 
 function SellButton({ activeTab, setActiveTab }: { activeTab: string, setActiveTab: (t: 'buy' | 'sell') => void }) {
-    return <div className={`flex flex-col mb-[-2px] flex-1 cursor-pointer justify-center border-b-2 p-4 ${activeTab === 'sell' ? 'border-b-redBorder bg-redBackgroundTransparent' : 'border-b-baseBorderMed hover:border-b-baseBorderFocus'}`} onClick={() => setActiveTab('sell')}>
+    return <div className={`flex flex-col mb-[-2px] flex-1 cursor-pointer justify-center border-b-2 p-4 transition active:bg-baseBackgroundL2 ${activeTab === 'sell' ? 'border-b-redBorder bg-redBackgroundTransparent' : 'border-b-baseBorderMed hover:border-b-baseBorderFocus'}`} onClick={() => setActiveTab('sell')}>
         <p className="text-center text-sm font-semibold text-redText">
             Sell
         </p>

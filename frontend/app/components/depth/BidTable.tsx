@@ -5,13 +5,22 @@ export const BidTable = ({ bids }: { bids: [string, string][] }) => {
     const maxTotal = relevantBids.reduce((acc, [, quantity]) => acc + Number(quantity), 0);
 
     return <div className="flex flex-col">
-        {bidsWithTotal?.map(([price, quantity, total]) => <Bid maxTotal={maxTotal} total={total} key={price} price={price} quantity={quantity} />)}
+        {bidsWithTotal?.map(([price, quantity, total], i) => (
+            <Bid
+                maxTotal={maxTotal}
+                total={total}
+                key={`${price}-${i}`}
+                price={price}
+                quantity={quantity}
+                hideOnMobile={i >= 8}
+            />
+        ))}
     </div>
 }
 
-function Bid({ price, quantity, total, maxTotal }: { price: string, quantity: string, total: number, maxTotal: number }) {
+function Bid({ price, quantity, total, maxTotal, hideOnMobile }: { price: string, quantity: string, total: number, maxTotal: number, hideOnMobile?: boolean }) {
     return (
-        <div className="relative flex w-full overflow-hidden rounded-sm">
+        <div className={`relative w-full overflow-hidden rounded-sm ${hideOnMobile ? "hidden md:flex" : "flex"}`}>
             <div
                 className="absolute left-0 top-0 h-full bg-greenBackgroundTransparent transition-[width] duration-300 ease-in-out"
                 style={{ width: `${(100 * total) / maxTotal}%` }}

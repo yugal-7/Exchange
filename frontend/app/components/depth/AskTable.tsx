@@ -11,13 +11,27 @@ export const AskTable = ({ asks }: { asks: [string, string][] }) => {
     const maxTotal = relevantAsks.reduce((acc, [, quantity]) => acc + Number(quantity), 0);
     asksWithTotal.reverse();
 
+    // On mobile only the rows closest to the spread (the tail, since asks
+    // are sorted high-to-low here) stay visible, to keep the order book
+    // from dominating the screen before a user reaches the trade panel.
+    const mobileVisibleFrom = Math.max(0, asksWithTotal.length - 8);
+
     return <div className="flex flex-col">
-        {asksWithTotal.map(([price, quantity, total]) => <Ask maxTotal={maxTotal} key={price} price={price} quantity={quantity} total={total} />)}
+        {asksWithTotal.map(([price, quantity, total], i) => (
+            <Ask
+                maxTotal={maxTotal}
+                key={`${price}-${i}`}
+                price={price}
+                quantity={quantity}
+                total={total}
+                hideOnMobile={i < mobileVisibleFrom}
+            />
+        ))}
     </div>
 }
 
-function Ask({ price, quantity, total, maxTotal }: { price: string, quantity: string, total: number, maxTotal: number }) {
-    return <div className="relative flex w-full overflow-hidden rounded-sm">
+function Ask({ price, quantity, total, maxTotal, hideOnMobile }: { price: string, quantity: string, total: number, maxTotal: number, hideOnMobile?: boolean }) {
+    return <div className={`relative w-full overflow-hidden rounded-sm ${hideOnMobile ? "hidden md:flex" : "flex"}`}>
         <div
             className="absolute left-0 top-0 h-full bg-redBackgroundTransparent transition-[width] duration-300 ease-in-out"
             style={{ width: `${(100 * total) / maxTotal}%` }}

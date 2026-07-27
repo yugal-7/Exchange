@@ -6,7 +6,10 @@ export function Toaster() {
     if (!toasts.length) return null;
 
     return (
-        <div className="pointer-events-none fixed inset-x-0 bottom-4 z-[200] flex flex-col items-center gap-2 px-4">
+        <div
+            className="pointer-events-none fixed inset-x-0 bottom-4 z-[200] flex flex-col items-center gap-2 px-4"
+            style={{ paddingBottom: "env(safe-area-inset-bottom)" }}
+        >
             {toasts.map((t) => (
                 <div
                     key={t.id}
@@ -19,7 +22,11 @@ export function Toaster() {
                     }`}
                 >
                     <span>{t.text}</span>
-                    <button onClick={() => dismissToast(t.id)} className="text-baseTextMedEmphasis transition hover:text-baseTextHighEmphasis" aria-label="Dismiss">
+                    <button
+                        onClick={() => dismissToast(t.id)}
+                        className="-m-1.5 p-1.5 text-baseTextMedEmphasis transition hover:text-baseTextHighEmphasis active:opacity-60"
+                        aria-label="Dismiss"
+                    >
                         ✕
                     </button>
                 </div>

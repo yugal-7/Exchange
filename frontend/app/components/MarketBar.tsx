@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { type Ticker as TickerType } from "../utils/types";
 import { getTicker } from "../utils/httpClient";
 import { SignalingManager } from "../utils/SignalingManager";
+import { CoinIcon } from "./core/CoinIcon";
+import { useFlash } from "../utils/useFlash";
 
 export const MarketBar = ({ market }: { market: string }) => {
     const [ticker, setTicker] = useState<TickerType | null>(null);
@@ -30,13 +32,18 @@ export const MarketBar = ({ market }: { market: string }) => {
     }, [market])
 
     const isUp = Number(ticker?.priceChange) >= 0;
+    const flash = useFlash(ticker?.lastPrice);
 
     return (
         <div className="relative w-full border-b border-baseBorderLight">
             <div className="flex w-full flex-row items-center overflow-x-auto no-scrollbar">
                 <div className="flex flex-row items-center gap-8 py-3 pl-2 pr-6">
                     <MarketIdentity market={market} />
-                    <Stat label="Last Price" value={ticker ? `$${ticker.lastPrice}` : '—'} valueClassName={isUp ? "text-greenText" : "text-redText"} />
+                    <Stat
+                        label="Last Price"
+                        value={ticker ? `$${ticker.lastPrice}` : '—'}
+                        valueClassName={`rounded px-1 -mx-1 transition-colors duration-500 ${isUp ? "text-greenText" : "text-redText"} ${flash === "up" ? "bg-greenBackgroundTransparent" : flash === "down" ? "bg-redBackgroundTransparent" : ""}`}
+                    />
                     <Stat
                         label="24H Change"
                         value={ticker ? `${isUp ? "+" : ""}${ticker.priceChange} (${(Number(ticker.priceChangePercent) * 100).toFixed(2)}%)` : '—'}
@@ -62,19 +69,9 @@ function Stat({ label, value, valueClassName = "" }: { label: string, value: str
 }
 
 function MarketIdentity({ market }: { market: string }) {
-    const getMarketName = (name: string) => {
-        const index = name.indexOf('_USDC');
-        return name.substring(0, index);
-    }
     return (
         <div className="flex flex-shrink-0 flex-row items-center gap-2 pr-4">
-            <img
-                alt="coin logo"
-                loading="lazy"
-                decoding="async"
-                className="h-9 w-9 rounded-full"
-                src={`https://backpack.exchange/coins/${getMarketName(market).toLowerCase()}.svg`}
-            />
+            <CoinIcon symbol={market} size={36} />
             <p className="text-base font-semibold text-baseTextHighEmphasis">{market.replace("_", " / ")}</p>
         </div>
     )

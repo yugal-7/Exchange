@@ -3,6 +3,7 @@ import { useMemo, useState } from "react";
 import { useSession } from "../utils/session";
 import { requestAuth } from "../utils/authModalRequest";
 import { showToast } from "../utils/toast";
+import { placeOrder } from "../utils/orders";
 
 const AVAILABLE_BALANCE = 36.94;
 
@@ -43,6 +44,13 @@ export function SwapUI({ market }: { market: string }) {
             return;
         }
         const label = type === 'limit' ? `@ ${price} ${quote}` : 'at market price';
+        placeOrder({
+            market,
+            side: activeTab,
+            type: type as 'limit' | 'market',
+            price: type === 'limit' ? price : '',
+            quantity,
+        });
         showToast(`${isBuy ? 'Buy' : 'Sell'} order placed: ${quantity} ${base} ${label} (demo)`, 'success');
         setQuantity('');
         setPrice('');

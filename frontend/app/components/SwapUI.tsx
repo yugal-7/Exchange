@@ -1,11 +1,11 @@
 "use client";
-import { useMemo, useState } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useSession } from "../utils/session";
 import { requestAuth } from "../utils/authModalRequest";
 import { showToast } from "../utils/toast";
 import { placeOrder } from "../utils/orders";
-
-const AVAILABLE_BALANCE = 36.94;
+import { DEMO_USDC_BALANCE as AVAILABLE_BALANCE } from "../utils/account";
+import { celebrate } from "../utils/celebrate";
 
 export function SwapUI({ market }: { market: string }) {
     const [price, setPrice] = useState('');
@@ -13,6 +13,7 @@ export function SwapUI({ market }: { market: string }) {
     const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
     const [type, setType] = useState('limit');
     const session = useSession();
+    const submitRef = useRef<HTMLButtonElement>(null);
 
     const [base, quote] = market.split('_');
 
@@ -51,7 +52,8 @@ export function SwapUI({ market }: { market: string }) {
             price: type === 'limit' ? price : '',
             quantity,
         });
-        showToast(`${isBuy ? 'Buy' : 'Sell'} order placed: ${quantity} ${base} ${label} (demo)`, 'success');
+        showToast(`🎉 ${isBuy ? 'Buy' : 'Sell'} order placed: ${quantity} ${base} ${label} (demo)`, 'success');
+        celebrate(submitRef.current);
         setQuantity('');
         setPrice('');
     };
@@ -132,6 +134,7 @@ export function SwapUI({ market }: { market: string }) {
                             ))}
                         </div>
                         <button
+                            ref={submitRef}
                             type="button"
                             onClick={submit}
                             disabled={!!session && !canSubmit}

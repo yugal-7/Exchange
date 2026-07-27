@@ -5,6 +5,7 @@ import { getTicker } from "../utils/httpClient";
 import { SignalingManager } from "../utils/SignalingManager";
 import { CoinIcon } from "./core/CoinIcon";
 import { useFlash } from "../utils/useFlash";
+import { useAnimatedNumber } from "../utils/useAnimatedNumber";
 
 export const MarketBar = ({ market }: { market: string }) => {
     const [ticker, setTicker] = useState<TickerType | null>(null);
@@ -33,6 +34,7 @@ export const MarketBar = ({ market }: { market: string }) => {
 
     const isUp = Number(ticker?.priceChange) >= 0;
     const flash = useFlash(ticker?.lastPrice);
+    const animatedPrice = useAnimatedNumber(ticker?.lastPrice);
 
     return (
         <div className="relative w-full border-b border-baseBorderLight">
@@ -41,7 +43,7 @@ export const MarketBar = ({ market }: { market: string }) => {
                     <MarketIdentity market={market} />
                     <Stat
                         label="Last Price"
-                        value={ticker ? `$${ticker.lastPrice}` : '—'}
+                        value={ticker ? `$${animatedPrice}` : '—'}
                         valueClassName={`rounded px-1 -mx-1 transition-colors duration-500 ${isUp ? "text-greenText" : "text-redText"} ${flash === "up" ? "bg-greenBackgroundTransparent" : flash === "down" ? "bg-redBackgroundTransparent" : ""}`}
                     />
                     <Stat

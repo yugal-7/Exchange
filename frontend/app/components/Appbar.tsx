@@ -13,6 +13,7 @@ import { AuthModal } from "./AuthModal"
 const NAV_LINKS = [
     { label: "Markets", href: "/markets" },
     { label: "Trade", href: "/trade/SOL_USDC" },
+    { label: "Portfolio", href: "/portfolio" },
 ];
 
 export const Appbar = () => {
@@ -98,15 +99,6 @@ export const Appbar = () => {
 
             {menuOpen && (
                 <div className="flex flex-col gap-1 border-t border-baseBorderLight py-3 md:hidden">
-                    {NAV_LINKS.map((link) => (
-                        <button
-                            key={link.href}
-                            onClick={() => goto(link.href)}
-                            className="rounded-md px-3 py-3 text-left text-sm font-medium text-baseTextMedEmphasis transition hover:bg-baseBackgroundL1 hover:text-baseTextHighEmphasis active:bg-baseBackgroundL2"
-                        >
-                            {link.label}
-                        </button>
-                    ))}
                     <div className="px-3 py-2">
                         <DemoModeButton isDemoMode={isDemoMode} onClick={toggleDemoMode} />
                     </div>

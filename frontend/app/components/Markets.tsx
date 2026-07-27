@@ -1,13 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Search, Star } from "lucide-react";
 import { Ticker } from "../utils/types";
 import { getTickers } from "../utils/httpClient";
 import { useRouter } from "next/navigation";
 import { CoinIcon } from "./core/CoinIcon";
 import { useFlash } from "../utils/useFlash";
+import { useAnimatedNumber } from "../utils/useAnimatedNumber";
 import { toggleFavorite, useFavorites } from "../utils/favorites";
+import { PullToRefresh } from "./core/PullToRefresh";
 
 const getMarketName = (name: string) => {
   const index = name.indexOf('_USDC');
@@ -20,9 +22,14 @@ export const Markets = () => {
   const [favoritesOnly, setFavoritesOnly] = useState(false);
   const favorites = useFavorites();
 
-  useEffect(() => {
-    getTickers().then((m) => setTickers(m.sort((a, b) => Number(b.lastPrice) - Number(a.lastPrice))));
+  const loadTickers = useCallback(async () => {
+    const m = await getTickers();
+    setTickers(m.sort((a, b) => Number(b.lastPrice) - Number(a.lastPrice)));
   }, []);
+
+  useEffect(() => {
+    loadTickers();
+  }, [loadTickers]);
 
   const filtered = useMemo(() => {
     if (!tickers) return tickers;
@@ -39,6 +46,7 @@ export const Markets = () => {
     : null;
 
   return (
+    <PullToRefresh onRefresh={loadTickers}>
     <div className="flex w-full max-w-[1280px] flex-1 flex-col">
       <div className="mb-4 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <h1 className="text-2xl font-semibold text-baseTextHighEmphasis">Markets</h1>
@@ -95,6 +103,7 @@ export const Markets = () => {
         {filtered?.map((m) => <MarketCard market={m} key={m.symbol} />)}
       </div>
     </div>
+    </PullToRefresh>
   );
 };
 
@@ -139,6 +148,7 @@ function FavoriteButton({ symbol, favorited, size = 16 }: { symbol: string, favo
 function MarketCard({ market }: { market: Ticker }) {
   const router = useRouter();
   const flash = useFlash(market.lastPrice);
+  const animatedPrice = useAnimatedNumber(market.lastPrice);
   const favorites = useFavorites();
   const favorited = favorites.has(market.symbol);
   const isUp = Number(market.priceChangePercent) >= 0;
@@ -156,7 +166,7 @@ function MarketCard({ market }: { market: Ticker }) {
       </div>
       <div className="flex shrink-0 flex-col items-end gap-0.5">
         <p className={`rounded px-1 -mx-1 text-sm font-semibold tabular-nums text-baseTextHighEmphasis transition-colors duration-500 ${flash === "up" ? "bg-greenBackgroundTransparent" : flash === "down" ? "bg-redBackgroundTransparent" : ""}`}>
-          ${market.lastPrice}
+          ${animatedPrice}
         </p>
         <p className={`rounded-full px-1.5 py-0.5 text-xs font-medium tabular-nums ${isUp ? "bg-greenBackgroundTransparent text-greenText" : "bg-redBackgroundTransparent text-redText"}`}>
           {isUp ? "+" : ""}{(Number(market.priceChangePercent) * 100).toFixed(2)}%
@@ -169,6 +179,7 @@ function MarketCard({ market }: { market: Ticker }) {
 function MarketRow({ market }: { market: Ticker }) {
   const router = useRouter();
   const flash = useFlash(market.lastPrice);
+  const animatedPrice = useAnimatedNumber(market.lastPrice);
   const favorites = useFavorites();
   const favorited = favorites.has(market.symbol);
 
@@ -192,7 +203,7 @@ function MarketRow({ market }: { market: Ticker }) {
       </td>
       <td className="px-1 py-3">
         <p className={`inline-block rounded px-1 -mx-1 text-base font-medium tabular-nums text-baseTextHighEmphasis transition-colors duration-500 ${flash === "up" ? "bg-greenBackgroundTransparent" : flash === "down" ? "bg-redBackgroundTransparent" : ""}`}>
-          $ {market.lastPrice}
+          $ {animatedPrice}
         </p>
       </td>
       <td className="px-1 py-3">

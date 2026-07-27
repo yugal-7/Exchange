@@ -1,7 +1,8 @@
 'use client'
 import { Content } from "./components/Content"
+import { PullToRefresh } from "./components/core/PullToRefresh"
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { type Ticker } from "./utils/types";
 import { getTickers } from "./utils/httpClient";
@@ -10,11 +11,17 @@ export default function Home() {
   const [tickers, setTickers] = useState<Ticker[]>([]);
   const router = useRouter();
 
-  useEffect(() => {
-    getTickers().then((m) => setTickers(m));
+  const loadTickers = useCallback(async () => {
+    const m = await getTickers();
+    setTickers(m);
   }, []);
 
+  useEffect(() => {
+    loadTickers();
+  }, [loadTickers]);
+
   return (
+    <PullToRefresh onRefresh={loadTickers}>
     <main className="mx-auto max-w-[1280px]">
       <div className="relative mt-6 h-[320px] w-full overflow-hidden rounded-2xl border border-baseBorderLight bg-landing bg-cover bg-center sm:h-[380px]">
         <div className="absolute inset-0 bg-gradient-to-t from-baseBackgroundL0 via-baseBackgroundL0/40 to-transparent" />
@@ -40,5 +47,6 @@ export default function Home() {
       </div>
       <Content tickers={tickers} />
     </main>
+    </PullToRefresh>
   )
 }

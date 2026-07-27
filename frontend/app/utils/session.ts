@@ -3,11 +3,17 @@ import { useSyncExternalStore } from "react";
 /**
  * A client-only mock session (no backend auth exists in this app yet).
  * Stored in localStorage purely so the signed-in state survives a
- * refresh; nothing is ever sent over the network.
+ * refresh; nothing is ever sent over the network. Google sign-in
+ * populates name/picture from the (client-side-only, unverified)
+ * Google ID token — fine for a demo, not a substitute for real
+ * server-side token verification.
  */
 
 export interface Session {
     email: string;
+    name?: string;
+    picture?: string;
+    provider?: "demo" | "google";
 }
 
 const STORAGE_KEY = "trade-wave-demo-session";
@@ -19,8 +25,8 @@ function notify() {
     listeners.forEach((listener) => listener());
 }
 
-export function signIn(email: string) {
-    session = { email };
+export function signIn(profile: Session) {
+    session = profile;
     hydrated = true;
     window.localStorage.setItem(STORAGE_KEY, JSON.stringify(session));
     notify();

@@ -31,11 +31,11 @@ export function TradeView({
               high: parseFloat(x.high),
               low: parseFloat(x.low),
               open: parseFloat(x.open),
-              timestamp: new Date(x.end), 
+              timestamp: new Date(Number(x.end) * 1000),
             })),
           ].sort((x, y) => (x.timestamp < y.timestamp ? -1 : 1)) || [],
           {
-            background: "#0e0f14",
+            background: "#12151c",
             color: "white",
           }
         );
@@ -47,8 +47,6 @@ export function TradeView({
   }, [market, chartRef]);
 
   return (
-    <>
-      <div ref={chartRef} style={{ height: "520px", width: "100%", marginTop: 4 }}></div>
-    </>
+    <div ref={chartRef} className="h-full min-h-[420px] w-full" />
   );
 }

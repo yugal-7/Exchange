@@ -8,24 +8,22 @@ import { useParams } from "next/navigation";
 export default function Page() {
     const { market } = useParams();
 
-    return <div className="flex flex-row flex-1">
-        <div className="flex flex-col flex-1">
+    return <div className="mx-auto flex w-full max-w-[1280px] flex-col overflow-hidden rounded-xl border border-baseBorderLight lg:flex-row">
+        <div className="flex flex-1 flex-col">
             <MarketBar market={market as string} />
-            <div className="flex flex-row h-[620px] border-y border-slate-800">
-                <div className="flex flex-col flex-1">
+            <div className="flex flex-col border-baseBorderLight md:h-[560px] md:flex-row md:border-y">
+                <div className="h-[420px] flex-1 md:h-full">
                     <TradeView market={market as string} />
                 </div>
-                <div className="w-[1px] flex-col border-slate-800 border-l"></div>
-                <div className="flex flex-col w-[250px] overflow-hidden">
-                    <Depth market={market as string} /> 
+                <div className="border-baseBorderLight md:w-[1px] md:border-l" />
+                <div className="flex w-full flex-col overflow-hidden border-t border-baseBorderLight md:w-[250px] md:border-t-0">
+                    <Depth market={market as string} />
                 </div>
             </div>
         </div>
-        <div className="w-[1px] flex-col border-slate-800 border-l"></div>
-        <div>
-            <div className="flex flex-col w-[250px]">
-                <SwapUI market={market as string} />
-            </div>
+        <div className="border-baseBorderLight md:w-[1px] md:border-l" />
+        <div className="w-full border-t border-baseBorderLight bg-baseBackgroundL1 md:w-[280px] md:border-t-0">
+            <SwapUI market={market as string} />
         </div>
     </div>
 }

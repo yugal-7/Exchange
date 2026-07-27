@@ -44,17 +44,20 @@ export function AuthModal({ open, mode, onClose }: { open: boolean, mode: 'signi
             >
                 <input
                     type="email"
+                    inputMode="email"
+                    autoComplete="email"
                     placeholder="Email"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
-                    className="h-10 rounded-lg border border-baseBorderLight bg-baseBackgroundL2 px-3 text-sm text-baseTextHighEmphasis placeholder-baseTextMedEmphasis outline-none transition focus:border-accentBlue"
+                    className="h-11 rounded-lg border border-baseBorderLight bg-baseBackgroundL2 px-3 text-base text-baseTextHighEmphasis placeholder-baseTextMedEmphasis outline-none transition focus:border-accentBlue sm:h-10 sm:text-sm"
                 />
                 <input
                     type="password"
+                    autoComplete={mode === 'signup' ? 'new-password' : 'current-password'}
                     placeholder="Password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-10 rounded-lg border border-baseBorderLight bg-baseBackgroundL2 px-3 text-sm text-baseTextHighEmphasis placeholder-baseTextMedEmphasis outline-none transition focus:border-accentBlue"
+                    className="h-11 rounded-lg border border-baseBorderLight bg-baseBackgroundL2 px-3 text-base text-baseTextHighEmphasis placeholder-baseTextMedEmphasis outline-none transition focus:border-accentBlue sm:h-10 sm:text-sm"
                 />
                 {error && <p className="text-xs text-redText">{error}</p>}
                 <button

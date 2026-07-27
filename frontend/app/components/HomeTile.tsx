@@ -37,7 +37,7 @@ export const Tile = ({ props }: { props: { title: string, data: Ticker[], loadin
         )}
         {!loading && data?.map((d) => (
           <a href={`/trade/${d.symbol}`} key={d.symbol}>
-            <div className="flex flex-row items-center justify-between rounded-md px-3 py-2 text-sm transition hover:bg-baseBackgroundL2">
+            <div className="flex flex-row items-center justify-between rounded-md px-3 py-2 text-sm transition hover:bg-baseBackgroundL2 active:bg-baseBackgroundL3">
               <div className="flex w-[40%] flex-row items-center gap-2">
                 <CoinIcon symbol={d.symbol} size={20} className="z-10" />
                 <p className="truncate font-medium text-baseTextHighEmphasis">{getName(d.symbol)}</p>

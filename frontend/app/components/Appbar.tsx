@@ -40,11 +40,14 @@ export const Appbar = () => {
     };
 
     return (
-        <div className="sticky top-0 z-50 -mx-2 mb-2 border-b border-baseBorderLight bg-baseBackgroundL0/80 px-2 backdrop-blur supports-[backdrop-filter]:bg-baseBackgroundL0/60">
+        <div
+            className="sticky top-0 z-50 -mx-2 mb-2 border-b border-baseBorderLight bg-baseBackgroundL0/80 px-2 backdrop-blur supports-[backdrop-filter]:bg-baseBackgroundL0/60"
+            style={{ paddingTop: "env(safe-area-inset-top)" }}
+        >
             <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between">
                 <div className="flex items-center gap-8">
                     <button
-                        className="flex items-center gap-2 text-lg font-bold tracking-tight text-baseTextHighEmphasis"
+                        className="flex items-center gap-2 rounded-lg text-lg font-bold tracking-tight text-baseTextHighEmphasis transition active:opacity-70"
                         onClick={() => goto('/')}
                     >
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accentBlue to-greenText text-sm text-white">
@@ -85,7 +88,7 @@ export const Appbar = () => {
                 </div>
 
                 <button
-                    className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg text-baseTextHighEmphasis md:hidden"
+                    className="flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-baseTextHighEmphasis transition active:bg-baseBackgroundL2 md:hidden"
                     onClick={() => setMenuOpen((v) => !v)}
                     aria-label={menuOpen ? "Close menu" : "Open menu"}
                 >
@@ -99,7 +102,7 @@ export const Appbar = () => {
                         <button
                             key={link.href}
                             onClick={() => goto(link.href)}
-                            className="rounded-md px-3 py-2 text-left text-sm font-medium text-baseTextMedEmphasis transition hover:bg-baseBackgroundL1 hover:text-baseTextHighEmphasis"
+                            className="rounded-md px-3 py-3 text-left text-sm font-medium text-baseTextMedEmphasis transition hover:bg-baseBackgroundL1 hover:text-baseTextHighEmphasis active:bg-baseBackgroundL2"
                         >
                             {link.label}
                         </button>
@@ -111,7 +114,7 @@ export const Appbar = () => {
                         {session ? (
                             <button
                                 onClick={handleSignOut}
-                                className="h-9 rounded-lg border border-baseBorderMed text-sm font-semibold text-baseTextHighEmphasis transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2"
+                                className="h-11 rounded-lg border border-baseBorderMed text-sm font-semibold text-baseTextHighEmphasis transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2 active:bg-baseBackgroundL2"
                             >
                                 Sign out ({session.email})
                             </button>
@@ -135,7 +138,7 @@ function DemoModeButton({ isDemoMode, onClick }: { isDemoMode: boolean, onClick:
         <button
             onClick={onClick}
             title={isDemoMode ? "Using simulated data — click to retry the live connection" : "Force simulated demo data"}
-            className={`flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs font-medium transition ${
+            className={`flex items-center gap-1.5 rounded-full border px-3 py-1.5 text-xs font-medium transition active:scale-95 ${
                 isDemoMode
                     ? "border-amber-400/30 bg-amber-400/10 text-amber-400 hover:bg-amber-400/20"
                     : "border-baseBorderMed text-baseTextMedEmphasis hover:border-baseBorderFocus hover:text-baseTextHighEmphasis"
@@ -155,7 +158,7 @@ function SignedInMenu({ email, onSignOut }: { email: string, onSignOut: () => vo
             </span>
             <button
                 onClick={onSignOut}
-                className="h-9 rounded-lg border border-baseBorderMed px-3 text-sm font-semibold text-baseTextHighEmphasis transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2"
+                className="h-9 rounded-lg border border-baseBorderMed px-3 text-sm font-semibold text-baseTextHighEmphasis transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2 active:scale-95"
             >
                 Sign out
             </button>

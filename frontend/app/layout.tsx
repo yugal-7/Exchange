@@ -1,3 +1,4 @@
+import type { Viewport } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { Appbar } from "./components/Appbar";
@@ -6,6 +7,11 @@ import StoreProvider from './StoreProvider';
 import { Toaster } from "./components/core/Toaster";
 
 const inter = Inter({ subsets: ["latin"] });
+
+export const viewport: Viewport = {
+  viewportFit: "cover",
+  themeColor: "#0b0d12",
+};
 
 export default function RootLayout({
   children,

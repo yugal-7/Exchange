@@ -61,7 +61,28 @@ const config: Config = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-  			}
+  			},
+  			baseBackgroundL0: '#0b0d12',
+  			baseBackgroundL1: '#12151c',
+  			baseBackgroundL2: '#1a1e28',
+  			baseBackgroundL3: '#242938',
+  			baseBorderLight: '#242938',
+  			baseBorderMed: '#2f3547',
+  			baseBorderFocus: '#4a5273',
+  			baseTextHighEmphasis: '#f4f5f7',
+  			baseTextMedEmphasis: '#8b93a7',
+  			baseTextLowEmphasis: '#5b6274',
+  			accentBlue: '#5b8def',
+  			greenText: '#1fd18c',
+  			greenBorder: '#1fd18c',
+  			greenBackgroundTransparent: 'rgba(31, 209, 140, 0.08)',
+  			greenPrimaryButtonBackground: '#1fd18c',
+  			greenPrimaryButtonText: '#08130f',
+  			redText: '#f24968',
+  			redBorder: '#f24968',
+  			redBackgroundTransparent: 'rgba(242, 73, 104, 0.08)',
+  			redPrimaryButtonBackground: '#f24968',
+  			redPrimaryButtonText: '#180509'
   		}
   	}
   },

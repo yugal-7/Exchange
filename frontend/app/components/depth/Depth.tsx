@@ -1,41 +1,34 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDepth, getKlines, getTicker, getTrades } from "../../utils/httpClient";
+import { getDepth, getTicker } from "../../utils/httpClient";
 import { BidTable } from "./BidTable";
 import { AskTable } from "./AskTable";
 import { SignalingManager } from "@/app/utils/SignalingManager";
 
-interface Trade{
-    price: string;
-    quantity: string;
-    time: number,
-    a: number,
-    b: number
-}
-
-export function Depth({ market }: {market: string}) {
+export function Depth({ market }: { market: string }) {
     const [bids, setBids] = useState<[string, string][]>();
     const [asks, setAsks] = useState<[string, string][]>();
     const [price, setPrice] = useState<string>();
-    const [trades, setTrades] = useState<Trade[]>([]);
+    const [priceUp, setPriceUp] = useState<boolean>(true);
 
     useEffect(() => {
         getDepth(market).then(d => {
-            console.log('get depth');
             setBids(d.bids.reverse());
             setAsks(d.asks);
         });
 
-        getTicker(market).then(t => setPrice(t.lastPrice));
+        getTicker(market).then(t => {
+            setPrice(t.lastPrice);
+            setPriceUp(Number(t.priceChange) >= 0);
+        });
 
-        SignalingManager.getInstance().registerCallback('depth', (data: any)=>{
+        SignalingManager.getInstance().registerCallback('depth', (data: any) => {
             setBids((oldBids) => {
-                console.log('set bids');
                 const newBids = [...(oldBids || [])];
-                for(let i=0;i<newBids?.length;i++){
-                    for(let j=0;j<data.bids.length;j++){
-                        if(newBids[i][0] == data.bids[j][0]){
+                for (let i = 0; i < newBids?.length; i++) {
+                    for (let j = 0; j < data.bids.length; j++) {
+                        if (newBids[i][0] == data.bids[j][0]) {
                             newBids[i][1] = data.bids[j][1];
                         }
                     }
@@ -44,9 +37,9 @@ export function Depth({ market }: {market: string}) {
             });
             setAsks((oldAsks) => {
                 const newAsks = [...(oldAsks || [])];
-                for(let i=0;i<newAsks?.length;i++){
-                    for(let j=0;j<data.asks.length;j++){
-                        if(newAsks[i][0] == data.asks[j][0]){
+                for (let i = 0; i < newAsks?.length; i++) {
+                    for (let j = 0; j < data.asks.length; j++) {
+                        if (newAsks[i][0] == data.asks[j][0]) {
                             newAsks[i][1] = data.asks[j][1];
                         }
                     }
@@ -55,54 +48,50 @@ export function Depth({ market }: {market: string}) {
             });
         }, `DEPTH-${market}`)
 
-        SignalingManager.getInstance().sendMessage({"method":"SUBSCRIBE","params":[`depth.${market}`]}	);
+        SignalingManager.getInstance().sendMessage({ "method": "SUBSCRIBE", "params": [`depth.${market}`] });
 
-        SignalingManager.getInstance().registerCallback('trade', (data: Trade) => {
-            console.log(data);
-            setTrades((oldTrades) => {
-                const newTrades = [...oldTrades];
-                newTrades.unshift(data);
-                return newTrades.slice(0,10);
-            })
-        }, `TRADE-${market}`)
-
-        SignalingManager.getInstance().sendMessage({"method":"SUBSCRIBE","params":[`trade.${market}`]}	);
+        SignalingManager.getInstance().registerCallback('ticker', (data: any) => {
+            if (data?.lastPrice) {
+                setPrice(data.lastPrice);
+            }
+            if (data?.priceChange !== undefined) {
+                setPriceUp(Number(data.priceChange) >= 0);
+            }
+        }, `DEPTH-TICKER-${market}`);
+        SignalingManager.getInstance().sendMessage({ "method": "SUBSCRIBE", "params": [`ticker.${market}`] });
 
         return () => {
-            SignalingManager.getInstance().deRegisterCallback("depth", `TRADE-${market}`);
-            SignalingManager.getInstance().sendMessage({"method":"UNSUBSCRIBE","params":[`trade.${market}`]});
             SignalingManager.getInstance().deRegisterCallback("depth", `DEPTH-${market}`);
-            SignalingManager.getInstance().sendMessage({"method":"UNSUBSCRIBE","params":[`depth.${market}`]}	);
+            SignalingManager.getInstance().sendMessage({ "method": "UNSUBSCRIBE", "params": [`depth.${market}`] });
+            SignalingManager.getInstance().deRegisterCallback("ticker", `DEPTH-TICKER-${market}`);
+            SignalingManager.getInstance().sendMessage({ "method": "UNSUBSCRIBE", "params": [`ticker.${market}`] });
         }
     }, [market])
-    
-    return <div>
+
+    return <div className="flex flex-col gap-1 px-2 py-2">
         <TableHeader />
-        {/* <Trades trades={trades}/> */}
-        {asks && <AskTable asks={asks} />}
-        {price && <div>{price}</div>}
-        {bids && <BidTable bids={bids} />}
+        {asks ? <AskTable asks={asks} /> : <SkeletonRows />}
+        {price && (
+            <div className={`py-1.5 text-lg font-semibold tabular-nums ${priceUp ? "text-greenText" : "text-redText"}`}>
+                {price}
+            </div>
+        )}
+        {bids ? <BidTable bids={bids} /> : <SkeletonRows />}
     </div>
 }
 
-function Trades({trades}:{trades: Trade[]}){
-    return <div>
-        {
-            trades.map((trade) => {
-                return <div className={trade.a > trade.b ? 'text-red-500' : 'text-green-500'} key={trade.time}>
-                    <span className="mx-1">{trade.price}</span>
-                    <span className="mx-1">{trade.quantity}</span>
-                    <span className="mx-1">{new Date(trade.time).getHours()}</span>
-                </div>
-            })
-        }
+function SkeletonRows() {
+    return <div className="flex flex-col gap-1">
+        {Array.from({ length: 8 }).map((_, i) => (
+            <div key={i} className="h-4 w-full animate-pulse rounded bg-baseBackgroundL2" />
+        ))}
     </div>
 }
 
 function TableHeader() {
-    return <div className="flex justify-between text-xs">
-    <div className="text-white">Price</div>
-    <div className="text-slate-500">Size</div>
-    <div className="text-slate-500">Total</div>
-</div>
+    return <div className="flex justify-between pb-1 text-xs font-medium text-baseTextMedEmphasis">
+        <div>Price</div>
+        <div>Size</div>
+        <div>Total</div>
+    </div>
 }

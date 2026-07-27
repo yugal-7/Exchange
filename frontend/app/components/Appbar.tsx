@@ -5,7 +5,7 @@ import { Menu, X } from "lucide-react";
 import { PrimaryButton, SuccessButton } from "./core/Button"
 import { useRouter, usePathname } from "next/navigation"
 import { useDemoMode, setForcedDemoMode } from "../utils/demoMode"
-import { useSession, signOut } from "../utils/session"
+import { useSession, signOut, type Session } from "../utils/session"
 import { showToast } from "../utils/toast"
 import { requestAuth, clearAuthRequest, useAuthModalRequest } from "../utils/authModalRequest"
 import { AuthModal } from "./AuthModal"
@@ -79,7 +79,7 @@ export const Appbar = () => {
                 <div className="hidden items-center gap-3 md:flex">
                     <DemoModeButton isDemoMode={isDemoMode} onClick={toggleDemoMode} />
                     {session ? (
-                        <SignedInMenu email={session.email} onSignOut={handleSignOut} />
+                        <SignedInMenu session={session} onSignOut={handleSignOut} />
                     ) : (
                         <>
                             <PrimaryButton onClick={() => requestAuth('signup')}>Sign up</PrimaryButton>
@@ -108,7 +108,7 @@ export const Appbar = () => {
                                 onClick={handleSignOut}
                                 className="h-11 rounded-lg border border-baseBorderMed text-sm font-semibold text-baseTextHighEmphasis transition hover:border-baseBorderFocus hover:bg-baseBackgroundL2 active:bg-baseBackgroundL2"
                             >
-                                Sign out ({session.email})
+                                Sign out ({session.name ?? session.email})
                             </button>
                         ) : (
                             <div className="flex gap-3">
@@ -142,11 +142,15 @@ function DemoModeButton({ isDemoMode, onClick }: { isDemoMode: boolean, onClick:
     );
 }
 
-function SignedInMenu({ email, onSignOut }: { email: string, onSignOut: () => void }) {
+function SignedInMenu({ session, onSignOut }: { session: Session, onSignOut: () => void }) {
     return (
         <div className="flex items-center gap-2">
-            <span className="max-w-[140px] truncate rounded-lg bg-baseBackgroundL2 px-3 py-1.5 text-xs font-medium text-baseTextHighEmphasis" title={email}>
-                {email}
+            <span
+                className="flex max-w-[160px] items-center gap-1.5 truncate rounded-lg bg-baseBackgroundL2 py-1.5 pl-1.5 pr-3 text-xs font-medium text-baseTextHighEmphasis"
+                title={session.email}
+            >
+                <Avatar session={session} />
+                <span className="truncate">{session.name ?? session.email}</span>
             </span>
             <button
                 onClick={onSignOut}
@@ -155,5 +159,30 @@ function SignedInMenu({ email, onSignOut }: { email: string, onSignOut: () => vo
                 Sign out
             </button>
         </div>
+    );
+}
+
+function Avatar({ session }: { session: Session }) {
+    const [errored, setErrored] = useState(false);
+    const initial = (session.name ?? session.email).charAt(0).toUpperCase();
+
+    if (!session.picture || errored) {
+        return (
+            <span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-accentBlue to-greenText text-[10px] font-semibold text-white">
+                {initial}
+            </span>
+        );
+    }
+
+    return (
+        // eslint-disable-next-line @next/next/no-img-element
+        <img
+            src={session.picture}
+            alt=""
+            width={20}
+            height={20}
+            className="h-5 w-5 shrink-0 rounded-full"
+            onError={() => setErrored(true)}
+        />
     );
 }

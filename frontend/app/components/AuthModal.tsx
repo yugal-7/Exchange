@@ -1,6 +1,7 @@
 'use client'
 import { useState } from "react";
 import { Modal } from "./core/Modal";
+import { GoogleSignInButton } from "./GoogleSignInButton";
 import { signIn } from "../utils/session";
 import { showToast } from "../utils/toast";
 
@@ -25,7 +26,7 @@ export function AuthModal({ open, mode, onClose }: { open: boolean, mode: 'signi
             setError('Password must be at least 4 characters.');
             return;
         }
-        signIn(email);
+        signIn({ email, provider: 'demo' });
         showToast(mode === 'signup' ? `Demo account created for ${email}` : `Signed in as ${email}`, 'success');
         close();
     };
@@ -38,8 +39,19 @@ export function AuthModal({ open, mode, onClose }: { open: boolean, mode: 'signi
             <p className="mt-1 text-xs text-baseTextMedEmphasis">
                 Demo account only — stored in this browser, no real backend involved.
             </p>
+
+            <div className="mt-4">
+                <GoogleSignInButton onDone={close} />
+            </div>
+
+            <div className="my-4 flex items-center gap-3">
+                <div className="h-px flex-1 bg-baseBorderLight" />
+                <span className="text-xs text-baseTextMedEmphasis">or continue with email</span>
+                <div className="h-px flex-1 bg-baseBorderLight" />
+            </div>
+
             <form
-                className="mt-4 flex flex-col gap-3"
+                className="flex flex-col gap-3"
                 onSubmit={(e) => { e.preventDefault(); submit(); }}
             >
                 <input

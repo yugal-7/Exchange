@@ -20,6 +20,39 @@ You can start editing the page by modifying `app/page.tsx`. The page auto-update
 
 This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
 
+## Environment variables
+
+| Variable | Required? | Purpose |
+| --- | --- | --- |
+| `NEXT_PUBLIC_WS_URL` | No (defaults to `ws://localhost:3001`) | Realtime WebSocket backend. |
+| `NEXT_PUBLIC_GOOGLE_CLIENT_ID` | No | Enables real "Sign in with Google". |
+
+### Enabling real Google sign-in
+
+The "Continue with Google" button works out of the box in **demo mode** — it
+signs you in as a fake `demo.user@gmail.com` account with no real Google
+account involved, consistent with the rest of this app's dummy-data
+fallbacks.
+
+To make it a real Google sign-in:
+
+1. Create an OAuth 2.0 Client ID in the [Google Cloud Console](https://console.cloud.google.com/apis/credentials)
+   (type "Web application").
+2. Add your app's URL (e.g. `http://localhost:3000` for local dev) to
+   **Authorized JavaScript origins**.
+3. Set the Client ID in `frontend/.env.local`:
+
+   ```
+   NEXT_PUBLIC_GOOGLE_CLIENT_ID=your-client-id.apps.googleusercontent.com
+   ```
+
+4. Restart the dev server. The auth modal will now render the real Google
+   button and sign users in with their actual Google account.
+
+Note: the resulting ID token is decoded client-side and never verified
+against Google's servers — fine for this demo app (there's no backend to
+hand it to), but a real production auth system would verify it server-side.
+
 ## Learn More
 
 To learn more about Next.js, take a look at the following resources:

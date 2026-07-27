@@ -1,5 +1,8 @@
 "use client";
 import { useMemo, useState } from "react";
+import { useSession } from "../utils/session";
+import { requestAuth } from "../utils/authModalRequest";
+import { showToast } from "../utils/toast";
 
 const AVAILABLE_BALANCE = 36.94;
 
@@ -8,6 +11,7 @@ export function SwapUI({ market }: { market: string }) {
     const [quantity, setQuantity] = useState('');
     const [activeTab, setActiveTab] = useState<'buy' | 'sell'>('buy');
     const [type, setType] = useState('limit');
+    const session = useSession();
 
     const [base, quote] = market.split('_');
 
@@ -26,6 +30,23 @@ export function SwapUI({ market }: { market: string }) {
     };
 
     const isBuy = activeTab === 'buy';
+    const canSubmit = Number(quantity) > 0 && (type === 'market' || Number(price) > 0);
+
+    const submit = () => {
+        if (!session) {
+            showToast('Sign in to place an order', 'info');
+            requestAuth('signin');
+            return;
+        }
+        if (!canSubmit) {
+            showToast(type === 'limit' ? 'Enter a valid price and quantity' : 'Enter a valid quantity', 'error');
+            return;
+        }
+        const label = type === 'limit' ? `@ ${price} ${quote}` : 'at market price';
+        showToast(`${isBuy ? 'Buy' : 'Sell'} order placed: ${quantity} ${base} ${label} (demo)`, 'success');
+        setQuantity('');
+        setPrice('');
+    };
 
     return <div>
         <div className="flex flex-col">
@@ -102,9 +123,11 @@ export function SwapUI({ market }: { market: string }) {
                         </div>
                         <button
                             type="button"
-                            className={`font-semibold focus:outline-none text-center h-12 rounded-xl text-base px-4 py-2 my-4 transition active:scale-[0.98] ${isBuy ? 'bg-greenPrimaryButtonBackground text-greenPrimaryButtonText' : 'bg-redPrimaryButtonBackground text-redPrimaryButtonText'}`}
+                            onClick={submit}
+                            disabled={!!session && !canSubmit}
+                            className={`font-semibold focus:outline-none text-center h-12 rounded-xl text-base px-4 py-2 my-4 transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50 ${isBuy ? 'bg-greenPrimaryButtonBackground text-greenPrimaryButtonText' : 'bg-redPrimaryButtonBackground text-redPrimaryButtonText'}`}
                         >
-                            {isBuy ? 'Buy' : 'Sell'} {base}
+                            {session ? `${isBuy ? 'Buy' : 'Sell'} ${base}` : 'Sign in to trade'}
                         </button>
                         <div className="flex justify-between flex-row mt-1">
                             <div className="flex flex-row gap-2">

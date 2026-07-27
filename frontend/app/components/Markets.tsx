@@ -15,14 +15,17 @@ export const Markets = () => {
   return (
     <div className="flex w-full max-w-[1280px] flex-1 flex-col">
       <h1 className="mb-4 text-2xl font-semibold text-baseTextHighEmphasis">Markets</h1>
-      <div className="flex w-full flex-col overflow-x-auto rounded-xl border border-baseBorderLight bg-baseBackgroundL1 px-5 py-3">
-        <table className="w-full min-w-[640px] table-auto">
-          <MarketHeader />
-          <tbody>
-            {!tickers && <MarketSkeletonRows />}
-            {tickers?.map((m) => <MarketRow market={m} key={m.symbol} />)}
-          </tbody>
-        </table>
+      <div className="relative w-full rounded-xl border border-baseBorderLight bg-baseBackgroundL1">
+        <div className="flex w-full flex-col overflow-x-auto px-5 py-3">
+          <table className="w-full min-w-[640px] table-auto">
+            <MarketHeader />
+            <tbody>
+              {!tickers && <MarketSkeletonRows />}
+              {tickers?.map((m) => <MarketRow market={m} key={m.symbol} />)}
+            </tbody>
+          </table>
+        </div>
+        <div className="pointer-events-none absolute right-0 top-0 h-full w-8 rounded-r-xl bg-gradient-to-l from-baseBackgroundL1 to-transparent sm:hidden" />
       </div>
     </div>
   );

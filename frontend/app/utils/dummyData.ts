@@ -55,7 +55,12 @@ function buildTicker(symbol: string): Ticker {
     const priceChangePercent = first === 0 ? 0 : priceChange / first;
     const high = Math.max(last, first) * (1 + Math.random() * 0.015);
     const low = Math.min(last, first) * (1 - Math.random() * 0.015);
-    const volume = base * (5_000 + Math.random() * 50_000);
+
+    // Volume is a quantity of the base asset, so it must not scale with price
+    // — deriving it from a plausible notional keeps both figures realistic
+    // (a $250M day in BTC is a few thousand coins, not a few billion).
+    const quoteVolume = 5_000_000 + Math.random() * 500_000_000;
+    const volume = quoteVolume / last;
 
     return {
         firstPrice: round(first, decimals),
@@ -64,7 +69,7 @@ function buildTicker(symbol: string): Ticker {
         low: round(low, decimals),
         priceChange: round(priceChange, decimals),
         priceChangePercent: priceChangePercent.toFixed(4),
-        quoteVolume: round(volume * last, 2),
+        quoteVolume: round(quoteVolume, 2),
         symbol,
         trades: String(Math.floor(1_000 + Math.random() * 50_000)),
         volume: round(volume, 2),
@@ -145,7 +150,10 @@ export function getDummyKlines(
         const close = randomWalk(open, 0.012);
         const high = Math.max(open, close) * (1 + Math.random() * 0.006);
         const low = Math.min(open, close) * (1 - Math.random() * 0.006);
-        const volume = base * (10 + Math.random() * 200);
+        // Same reasoning as the ticker: derive coin volume from a notional so
+        // it stays plausible regardless of the asset's price.
+        const quoteVolume = 100_000 + Math.random() * 5_000_000;
+        const volume = quoteVolume / close;
         const start = startMs + i * stepMs;
         const end = start + stepMs;
 
@@ -155,7 +163,7 @@ export function getDummyKlines(
             high: round(high, decimals),
             low: round(low, decimals),
             open: round(open, decimals),
-            quoteVolume: round(volume * close, 2),
+            quoteVolume: round(quoteVolume, 2),
             start: String(Math.floor(start / 1000)),
             trades: String(Math.floor(50 + Math.random() * 500)),
             volume: round(volume, 2),

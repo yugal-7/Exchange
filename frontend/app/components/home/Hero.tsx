@@ -19,7 +19,7 @@ export function Hero({ tickers, loading }: { tickers: Ticker[], loading: boolean
     const totalTrades = (tickers ?? []).reduce((s, t) => s + Number(t.trades || 0), 0);
 
     return (
-        <section className="relative -mx-2 overflow-hidden px-2 pb-10 pt-10 sm:pb-14 sm:pt-16">
+        <section className="relative -mx-4 overflow-hidden px-4 pb-10 pt-10 sm:-mx-6 sm:px-6 sm:pb-14 sm:pt-16 lg:-mx-8 lg:px-8">
             <Backdrop />
 
             <div className="relative mx-auto flex max-w-[1280px] flex-col gap-10 lg:flex-row lg:items-center lg:justify-between">

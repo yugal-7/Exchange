@@ -1,6 +1,6 @@
 'use client'
 import { ReactNode } from "react";
-import { ArrowDown, ArrowRight, Bot, Cpu, Database, Globe, Layers, Radio, Server } from "lucide-react";
+import { ArrowDown, ArrowRight, Bot, Cpu, Database, Globe, Layers, Radio, Server, ShieldCheck } from "lucide-react";
 import { Modal } from "./core/Modal";
 
 /**
@@ -93,6 +93,38 @@ export function SystemDesignModal({ open, onClose }: { open: boolean, onClose: (
                     <li><span className="font-medium text-baseTextHighEmphasis">Work queue</span> — the engine pushes trade/order events onto a <Code>db_processor</Code> list; a separate worker drains it into TimescaleDB.</li>
                     <li><span className="font-medium text-baseTextHighEmphasis">Pub/sub fan-out</span> — the engine publishes ticker/depth updates to per-market channels; the WS server relays them to every subscribed browser.</li>
                 </ul>
+            </Section>
+
+            <Section title="How the engine is verified">
+                <p className="mb-2 text-xs text-baseTextMedEmphasis">
+                    The matching engine is checked with <span className="font-medium text-baseTextHighEmphasis">property-based
+                    testing</span> rather than hand-picked examples: these invariants must hold after
+                    every operation, and a generator tries to falsify them across thousands of random
+                    order streams, shrinking any failure to a minimal reproducing sequence.
+                </p>
+                <div className="grid grid-cols-1 gap-1.5 sm:grid-cols-2">
+                    {[
+                        "Fills take the best available price first",
+                        "Time priority holds at each price level",
+                        "Contra side shrinks by exactly what executed",
+                        "An order never fills beyond its quantity",
+                        "No fully-consumed order rests in the book",
+                        "The book is never left crossed",
+                        "Depth matches quantity actually remaining",
+                        "A user never trades against themselves",
+                    ].map((inv) => (
+                        <div key={inv} className="flex items-start gap-1.5 rounded border border-baseBorderLight bg-baseBackgroundL2 px-2 py-1.5">
+                            <ShieldCheck size={12} className="mt-0.5 shrink-0 text-accentBlue" />
+                            <span className="text-[11px] leading-tight text-baseTextHighEmphasis">{inv}</span>
+                        </div>
+                    ))}
+                </div>
+                <p className="mt-2 text-xs text-baseTextMedEmphasis">
+                    Running this against the original orderbook falsified 9 of them. The sharpest was a
+                    three-order sequence proving takers were filled at worse prices than the book offered,
+                    because the book was an unsorted array scanned in insertion order. Full ledger with
+                    replay seeds in <Code>engine/BUGS.md</Code>.
+                </p>
             </Section>
 
             <Section title="Current shortcuts in this build" tone="warn">

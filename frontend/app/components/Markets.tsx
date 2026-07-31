@@ -137,7 +137,7 @@ function FavoriteButton({ symbol, favorited, size = 16 }: { symbol: string, favo
   return (
     <button
       onClick={(e) => { e.stopPropagation(); toggleFavorite(symbol); }}
-      className={`flex h-11 w-8 shrink-0 items-center justify-center transition active:scale-90 hover:text-amber-400 ${favorited ? "text-amber-400" : "text-baseTextMedEmphasis"}`}
+      className={`flex h-11 w-10 shrink-0 items-center justify-center transition active:scale-90 hover:text-amber-400 ${favorited ? "text-amber-400" : "text-baseTextMedEmphasis"}`}
       aria-label="Toggle favorite"
     >
       <Star size={size} fill={favorited ? "currentColor" : "none"} />

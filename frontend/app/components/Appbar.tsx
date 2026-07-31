@@ -50,7 +50,7 @@ export const Appbar = () => {
             <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between">
                 <div className="flex items-center gap-8">
                     <button
-                        className="flex items-center gap-2 rounded-lg text-lg font-bold tracking-tight text-baseTextHighEmphasis transition active:opacity-70"
+                        className="-ml-1 flex min-h-[44px] items-center gap-2 rounded-lg px-1 text-lg font-bold tracking-tight text-baseTextHighEmphasis transition active:opacity-70"
                         onClick={() => goto('/')}
                     >
                         <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-gradient-to-br from-accentBlue to-greenText text-sm text-white">

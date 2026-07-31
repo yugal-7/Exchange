@@ -8,7 +8,7 @@ import {
 import { Ticker } from "../utils/types";
 import { CoinIcon } from "./core/CoinIcon";
 
-export const Tile = ({ props }: { props: { title: string, data: Ticker[], loading?: boolean, emptyLabel?: string } }) => {
+export const Tile = ({ props }: { props: { title: string, data: Ticker[], loading?: boolean, emptyLabel?: string, hideHeader?: boolean } }) => {
   const data = props.data;
   const loading = props.loading ?? !data?.length;
 
@@ -19,9 +19,13 @@ export const Tile = ({ props }: { props: { title: string, data: Ticker[], loadin
 
   return (
     <Card className="min-h-[230px] w-full flex-1 rounded-xl border-baseBorderLight bg-baseBackgroundL1 p-2 shadow-sm">
-      <CardHeader className="pb-2">
-        <CardTitle className="text-sm font-medium text-baseTextMedEmphasis">{props.title}</CardTitle>
-      </CardHeader>
+      {/* On mobile the segmented tab above already names the list, so the
+          card header would just repeat it. */}
+      {!props.hideHeader && (
+        <CardHeader className="pb-2">
+          <CardTitle className="text-sm font-medium text-baseTextMedEmphasis">{props.title}</CardTitle>
+        </CardHeader>
+      )}
       <CardContent className="flex flex-col gap-0.5 px-2">
         {loading && (
           <div className="flex flex-col gap-2 py-1">
@@ -37,7 +41,7 @@ export const Tile = ({ props }: { props: { title: string, data: Ticker[], loadin
         )}
         {!loading && data?.map((d) => (
           <a href={`/trade/${d.symbol}`} key={d.symbol}>
-            <div className="flex flex-row items-center justify-between rounded-md px-3 py-2 text-sm transition hover:bg-baseBackgroundL2 active:bg-baseBackgroundL3">
+            <div className="flex min-h-[44px] flex-row items-center justify-between rounded-md px-3 py-2 text-sm transition hover:bg-baseBackgroundL2 active:bg-baseBackgroundL3">
               <div className="flex w-[40%] flex-row items-center gap-2">
                 <CoinIcon symbol={d.symbol} size={20} className="z-10" />
                 <p className="truncate font-medium text-baseTextHighEmphasis">{getName(d.symbol)}</p>

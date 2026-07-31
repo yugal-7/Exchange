@@ -32,7 +32,7 @@ export const Content = ({ tickers }: { tickers: Ticker[] }) => {
             <button
               key={tab.key}
               onClick={() => setActiveTab(tab.key)}
-              className={`flex-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition active:scale-95 ${
+              className={`min-h-[40px] flex-1 whitespace-nowrap rounded-md px-3 py-2 text-sm font-medium transition active:scale-95 ${
                 active.key === tab.key
                   ? "bg-baseBackgroundL3 text-baseTextHighEmphasis"
                   : "text-baseTextMedEmphasis"
@@ -42,7 +42,7 @@ export const Content = ({ tickers }: { tickers: Ticker[] }) => {
             </button>
           ))}
         </div>
-        <Tile props={{ title: active.label, data: active.data, loading, emptyLabel: active.emptyLabel }} />
+        <Tile props={{ title: active.label, data: active.data, loading, emptyLabel: active.emptyLabel, hideHeader: true }} />
       </div>
 
       {/* Tablet/desktop: side-by-side, as before */}

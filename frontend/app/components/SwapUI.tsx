@@ -127,7 +127,7 @@ export function SwapUI({ market }: { market: string }) {
                                     key={percent}
                                     type="button"
                                     onClick={() => applyPercent(percent)}
-                                    className="flex items-center justify-center flex-row rounded-full px-[16px] py-[6px] text-xs cursor-pointer bg-baseBackgroundL2 text-baseTextMedEmphasis transition hover:bg-baseBackgroundL3 hover:text-baseTextHighEmphasis active:scale-90"
+                                    className="flex h-10 flex-1 items-center justify-center rounded-full text-xs font-medium cursor-pointer bg-baseBackgroundL2 text-baseTextMedEmphasis transition hover:bg-baseBackgroundL3 hover:text-baseTextHighEmphasis active:scale-90 sm:h-8 sm:flex-none sm:px-4"
                                 >
                                     {percent === 100 ? 'Max' : `${percent}%`}
                                 </button>
@@ -144,14 +144,16 @@ export function SwapUI({ market }: { market: string }) {
                         </button>
                         <div className="flex justify-between flex-row mt-1">
                             <div className="flex flex-row gap-2">
-                                <div className="flex items-center">
+                                {/* The label wraps the input so the whole row is a
+                                    comfortable tap target, not just the 16px box. */}
+                                <label htmlFor="postOnly" className="flex min-h-[44px] cursor-pointer items-center pr-3 text-xs text-baseTextMedEmphasis transition active:opacity-60">
                                     <input className="h-4 w-4 cursor-pointer rounded border border-baseBorderMed bg-baseBackgroundL1" id="postOnly" type="checkbox" />
-                                    <label htmlFor="postOnly" className="ml-2 text-xs text-baseTextMedEmphasis">Post Only</label>
-                                </div>
-                                <div className="flex items-center">
+                                    <span className="ml-2">Post Only</span>
+                                </label>
+                                <label htmlFor="ioc" className="flex min-h-[44px] cursor-pointer items-center pr-3 text-xs text-baseTextMedEmphasis transition active:opacity-60">
                                     <input className="h-4 w-4 cursor-pointer rounded border border-baseBorderMed bg-baseBackgroundL1" id="ioc" type="checkbox" />
-                                    <label htmlFor="ioc" className="ml-2 text-xs text-baseTextMedEmphasis">IOC</label>
-                                </div>
+                                    <span className="ml-2">IOC</span>
+                                </label>
                             </div>
                         </div>
                     </div>

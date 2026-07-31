@@ -89,8 +89,15 @@
   * {
     @apply border-border;
   }
+  /* html carries the background too: on pages shorter than the viewport the
+     body box ends at its content, and without this the bare html element
+     shows through below it as a band of pure black. */
+  html {
+    @apply bg-background;
+  }
   body {
     @apply bg-background text-foreground;
+    min-height: 100vh;
     background-image: radial-gradient(ellipse 120% 60% at 50% -10%, rgba(91, 141, 239, 0.10), transparent 60%);
     background-attachment: fixed;
   }

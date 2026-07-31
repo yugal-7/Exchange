@@ -46,7 +46,10 @@ export function TradeView({
     init();
   }, [market, chartRef]);
 
+  // `overflow-hidden` keeps the lightweight-charts canvas from painting past
+  // its container while it settles on a size — without it the leftmost candle
+  // and the first x-axis label get clipped by the parent's rounded border.
   return (
-    <div ref={chartRef} className="h-full min-h-[420px] w-full" />
+    <div ref={chartRef} className="h-full min-h-[420px] w-full overflow-hidden" />
   );
 }

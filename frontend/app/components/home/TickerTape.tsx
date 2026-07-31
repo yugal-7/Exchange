@@ -15,7 +15,7 @@ export function TickerTape({ tickers }: { tickers: Ticker[] }) {
     const items = [...tickers, ...tickers];
 
     return (
-        <div className="relative -mx-2 border-y border-baseBorderLight bg-baseBackgroundL1/40">
+        <div className="relative -mx-4 border-y border-baseBorderLight bg-baseBackgroundL1/40 sm:-mx-6 lg:-mx-8">
             <div className="mask-fade-x overflow-hidden">
                 {/* group-hover pauses the scroll so a price can actually be read */}
                 <div className="group flex w-max">

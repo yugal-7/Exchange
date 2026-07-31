@@ -21,7 +21,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className="dark">
-      <body className="overflow-x-hidden px-2 pb-24 md:pb-6">
+      <body className="overflow-x-hidden px-4 pb-24 sm:px-6 md:pb-6 lg:px-8">
         <StoreProvider>
         <Providers>
         <Appbar />

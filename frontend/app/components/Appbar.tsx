@@ -44,7 +44,7 @@ export const Appbar = () => {
 
     return (
         <div
-            className="sticky top-0 z-50 -mx-2 mb-2 border-b border-baseBorderLight bg-baseBackgroundL0/80 px-2 backdrop-blur supports-[backdrop-filter]:bg-baseBackgroundL0/60"
+            className="sticky top-0 z-50 -mx-4 mb-2 border-b border-baseBorderLight bg-baseBackgroundL0/80 px-4 backdrop-blur supports-[backdrop-filter]:bg-baseBackgroundL0/60 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8"
             style={{ paddingTop: "env(safe-area-inset-top)" }}
         >
             <div className="mx-auto flex h-16 max-w-[1280px] items-center justify-between">

@@ -14,7 +14,6 @@ const config: Config = {
 			"gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
 			"gradient-conic":
 			  "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
-			"landing": "url('https://backpack.exchange/_next/image?url=%2Fhome-banner-refer.png&w=1200&q=75')"
 		  },
   		borderRadius: {
   			lg: 'var(--radius)',
